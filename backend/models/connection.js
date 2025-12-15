@@ -2,5 +2,5 @@ const mongoose = require('mongoose');
 
 mongoose
   .connect(process.env.CONNECTION_STRING)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+  .then(() => console.log(' MongoDB connected'))
+  .catch(err => console.error(' MongoDB error:', err));
