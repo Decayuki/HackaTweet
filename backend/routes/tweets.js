@@ -9,7 +9,7 @@ const hashtags = require("../models/hashtags");
 // ============================================================
 // Gestion de l'extraction des #
 // ============================================================
-const extractHashtags = (text = "") =>
+const extractHashtags = (text = '') =>
   (text.match(/#\w+/g) || []).map((tag) => tag.toLowerCase());
 
 // ============================================================
