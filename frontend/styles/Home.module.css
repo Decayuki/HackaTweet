@@ -1,22 +1,142 @@
-.main {
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0f172a;
+  color: white;
+}
+
+/* LEFT */
+.leftSection {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between; 
+  width: 20%;
+  padding-top: 20px;
+  padding-bottom: 50px;
+  border-right: 1px solid #334155;
+  margin-left: 50px;
+}
+
+.logoBloc {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
   align-items: center;
-  min-height: 100vh;
-  padding: 4rem 0;
+  justify-content: center;
 }
 
-.title {
-  line-height: 1.15;
-  font-size: 4rem;
+.logo {
+  width: 80px;
+  height: 80px;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
+.userBottom {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.title a:hover, .title a:focus, .title a:active {
-  text-decoration: underline;
+.accountBloc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profilPhoto {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  object-fit: cover;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+
+
+.userName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f5f6f7;
+  margin: 0;
+}
+
+.accountName {
+  font-size: 14px;
+  color: #536471;
+  margin: 0;
+}
+
+.logoutBtn {
+  background-color: transparent;
+  color: #f4f4f4;
+  border: 1px solid #cfd9de;
+  border-radius: 20px;
+  padding: 6px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.logoutBtn:hover {
+  background-color: rgba(29, 155, 240, 0.1);
+}
+
+/* CENTER */
+.mainContent {
+  width: 60%;
+  border-right: 1px solid #334155;
+}
+
+.publieContainer {
+  padding: 20px;
+  border-bottom: 1px solid #334155;
+}
+
+.inputStyle {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #475569;
+  padding: 10px 0;
+  color: white;
+}
+
+.buttonLine {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.buttonStyle {
+  background-color: #3b82f6;
+  border: none;
+  padding: 2px 30px;
+  border-radius: 500px;
+  color: white;
+  cursor: pointer;
+  font-size: 20px
+}
+
+.lastTweetsContainer {
+  padding: 20px;
+}
+
+/* RIGHT */
+.rightSection {
+  width: 20%;
+  padding: 20px;
+}
+
+.trendContainer {
+  margin-top: 20px;
 }

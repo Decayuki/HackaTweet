@@ -8,7 +8,7 @@
 
 /* Partie gauche */
 .leftContainer {
-  flex: 0,5;
+  flex: 0, 5;
 }
 
 .img {
@@ -37,7 +37,7 @@
 }
 
 /* Titre */
-.titleContainer{
+.titleContainer {
   white-space: pre-line;
   font-size: 56px;
   font-weight: 800;
@@ -67,7 +67,7 @@
 }
 
 .loginbutton {
-  padding: 14px 0;
+  padding: 14px 100px;
   border-radius: 999px;
   border: none;
   font-size: 15px;
@@ -102,4 +102,3 @@
 .signout:hover {
   background-color: rgba(29, 155, 240, 0.1);
 }
-
