@@ -9,6 +9,7 @@ const Hashtag = require('../models/hashtags');
 // Gestion de l'extraction des #
 // ============================================================
 const extractHashtags = (text = '') =>
+  //regex pour mémo : /#\ = début w+ = alphanum de un ou plrs caractères 
   (text.match(/#\w+/g) || []).map((tag) => tag.toLowerCase());
   
 
