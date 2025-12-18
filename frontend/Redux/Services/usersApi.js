@@ -3,14 +3,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const usersApi = createApi({
   reducerPath: 'usersApi',
-// fetch endpoint Backend
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/users' }),
+// fetch endpoint Backend + fetchBase = methode 
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/users' }),
   endpoints: (builder) => ({
     // à partir du backend
     signIn: builder.mutation({
-      //envoie la requete de "credentials" si c'etait des tweet j'aurai mis tweet ? D'ou vient credentials ?
+      //envoie la requete de "credentials" ({ username: '...', password: '...' }) 
         query: (credentials) => ({
-            // la requete demande via la route /sign in les "credentials"
         url: '/signin',
         method: 'POST',
         body: credentials,

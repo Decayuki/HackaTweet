@@ -1,15 +1,15 @@
-import '../styles/globals.css';
-import Head from 'next/head';
+import { Provider } from 'react-redux';
+import { store } from '../Redux/store'; 
 
-function App({ Component, pageProps }) {
+// Import du store
+// Provider permet de partager le store à tous les composants
+//
+function MyApp({ Component, pageProps }) {
   return (
-    <>
-      <Head>
-        <title>Next.js App</title>
-      </Head>
+    <Provider store={store}>
       <Component {...pageProps} />
-    </>
+    </Provider>
   );
 }
 
-export default App;
+export default MyApp;

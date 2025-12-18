@@ -5,7 +5,10 @@ import tweets from '../../../backend/models/tweets';
 export const tweetApi = createApi({
   reducerPath: 'tweetApi',
 // fetch endpoint Backend
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/tweet' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/tweet' }),
+  //
+  // revoir avec le code de Victor
+  //
   endpoints: (builder) => ({
     // à partir du backend
     tweets: builder.mutation({
