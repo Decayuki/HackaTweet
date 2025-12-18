@@ -4,6 +4,10 @@ const Hashtag = require('../models/hashtags');
 
 const router = express.Router();
 
+// ============================================================
+// GET /hashtags - Récupère tous les hashtags 
+// ============================================================
+
 router.get('/', async (req, res) => {
   const hashtags = await Hashtag.find()
     .select('tag tweets updatedAt')
@@ -13,6 +17,9 @@ router.get('/', async (req, res) => {
   res.json({ result: true, hashtags });
 });
 
+// ============================================================
+// GET /hashtags - Récupère UN hashtags
+// ============================================================
 router.get("/:tag", (req, res) => {
   // L'URL sera /hashtags/react, on ajoute le # pour chercher "#react" en DB
   const tag = `#${req.params.tag.toLowerCase()}`;
