@@ -3,7 +3,7 @@ import styles from "../styles/Modale.module.css";
 function SignUp() {
   return (
     <div>
-        <main className={styles.main}>
+      
             <div className={styles.logoContainer}>
                 <img src="/logo.png" className={styles.logo}/>
             </div>
@@ -16,7 +16,7 @@ function SignUp() {
                 <input type="password" placeholder="Password"/>
                 <button className={styles.signUpButton}>Sign up</button>
             </div>
-        </main>
+      
     </div>
   );
 }

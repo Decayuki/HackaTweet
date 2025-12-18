@@ -1,0 +1,49 @@
+.LastTweetsContainer {
+  background-color: #0f172a;
+  border-bottom: 1px solid #334155;
+  padding: 16px;
+}
+
+/* Ligne user */
+.userline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Avatar */
+.profilPhoto {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #3b82f6; /* placeholder si pas d'image */
+}
+
+/* Username */
+.userName {
+  font-weight: bold;
+  color: white;
+}
+
+/* @username + time */
+.accountName {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* Contenu du tweet */
+.tweetline {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: white;
+}
+
+/* Like / delete */
+.activitesLine {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #f7f7f7;
+}

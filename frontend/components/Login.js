@@ -1,7 +1,17 @@
 import styles from "../styles/Login.module.css";
-import Link from "next/link";
+import { useState } from "react";
+import Modal from "./Modal";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
 function Login() {
+  const [openModal, setOpenModal] = useState(null);
+  //  définir fermer la fenêtre
+  function closeModal() {
+    console.log("test");
+    setOpenModal(null);
+  }
+
   return (
     <div>
       <main className={styles.main}>
@@ -20,22 +30,30 @@ function Login() {
           <div className={styles.loginContainer}>
             <div className={styles.texte}>Join Hackatweet today.</div>
             <div className={styles.buttonContainer}>
-              <Link href="/modaleSignUp">
-                <button className={`${styles.loginbutton} ${styles.signup}`}>
-                  Sign up
-                </button>
-              </Link>
+              {/* Quand on click le bouton donner openModal un valeur pour déclencher l'ouvre de la fenêtre */}
+              <button
+                className={`${styles.loginbutton} ${styles.signup}`}
+                onClick={() => setOpenModal("signup")}
+              >
+                Sign up
+              </button>
+
               <p>Already have an account?</p>
 
-              <Link href="/modaleSignIn">
-                <button className={`${styles.loginbutton} ${styles.signout}`}>
-                  Sign in
-                </button>
-              </Link>
+              <button
+                className={`${styles.loginbutton} ${styles.signout}`}
+                onClick={() => setOpenModal("signin")}
+              >
+                Sign in
+              </button>
             </div>
           </div>
         </div>
       </main>
+      <Modal isOpen={openModal !== null} onClose={closeModal}>
+        {openModal === "signup" && <SignUp />}
+        {openModal === "signin" && <SignIn />}
+      </Modal>
     </div>
   );
 }
