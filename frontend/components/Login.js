@@ -8,7 +8,6 @@ function Login() {
   const [openModal, setOpenModal] = useState(null);
   //  définir fermer la fenêtre
   function closeModal() {
-    console.log("test");
     setOpenModal(null);
   }
 
