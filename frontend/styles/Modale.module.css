@@ -1,76 +1,93 @@
-.main {
-width: 520px;
-background-color: #0f1720;
-border-radius: 16px;
-padding: 32px 40px 40px;
-display: flex;
-flex-direction: column;
-align-items: center;
-color: #ffffff;
-box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+/* Modal Style */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
+.modal {
+  position: relative;
+  width: min(520px, 92vw);
+  background: #0f1720;
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 28px 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Style Containaer SignUp/SignIn */
 
 /* Logo */
 .logoContainer {
-margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-
 
 .logo {
-width: 80px;
-height: auto;
+  width: 80px;
+  height: auto;
 }
-
 
 /* Titre */
 .texte {
-margin-bottom: 32px;
+  margin-bottom: 32px;
 }
-
 
 .texte p {
-font-size: 22px;
-font-weight: 700;
-text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
 }
-
 
 /* Inputs + bouton */
 .informationContainer {
-width: 100%;
-display: flex;
-flex-direction: column;
-gap: 16px;
+  width: 100%;
+  max-width: 255px; /* Limite la largeur */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-
 
 .informationContainer input {
-width: 100%;
-padding: 14px 16px;
-border-radius: 6px;
-background-color: transparent;
-border: 1px solid #2f3b45;
-color: #ffffff;
-font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background-color: transparent;
+  border: 1px solid #2f3b45;
+  color: #ffffff;
+  font-size: 15px;
 }
-
 
 .informationContainer input::placeholder {
-color: #8899a6;
+  color: #8899a6;
 }
-
-
 
 /* Bouton Sign up */
 .signUpButton {
-margin-top: 16px;
-padding: 14px 0;
-border-radius: 999px;
-border: none;
-background-color: #ffffff;
-color: #0f1720;
-font-size: 15px;
-font-weight: 700;
-cursor: pointer;
+  margin-top: 16px;
+  padding: 14px 0;
+  border-radius: 999px;
+  border: none;
+  background-color: #ffffff;
+  color: #0f1720;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
 }
