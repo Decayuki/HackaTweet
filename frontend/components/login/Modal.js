@@ -1,4 +1,4 @@
-import styles from "../styles/Modale.module.css";
+import styles from "../../styles/Modale.module.css";
 
 function Modal(props) {
   if (!props.isOpen) return null;

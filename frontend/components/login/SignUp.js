@@ -1,4 +1,4 @@
-import styles from "../styles/Modale.module.css";
+import styles from "../../styles/Modale.module.css";
 import { useSignUpMutation } from "../../Redux/Services/usersApi";
 import { useState } from 'react';
 
@@ -21,7 +21,7 @@ function SignUp() {
       // hook RTK
       const res = await signUp(form);
       if (!res.data?.result) {
-        alter(res.data?.error || "Erreur"); // faudrait améliorer ça...
+        alert(res.data?.error || "Erreur"); // faudrait améliorer ça...
         return;
       }
       alert("Inscription réussie, bienvenue :)");

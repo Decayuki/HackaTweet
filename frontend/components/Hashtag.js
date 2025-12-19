@@ -1,10 +1,10 @@
 import styles from "../styles/Home.module.css";
 import Tweet from "../components/Tweet";
 import Trend from "./Trend";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-function Home() {
-  const [tweets, setTweets] = useState([]); // tableau
+function Hashtag() {
   const [token, setToken] = useState(""); // mets ton token ici (ex localStorage)
   const [userId, setUserId] = useState(""); // mets ton userId ici
 
@@ -13,21 +13,49 @@ function Home() {
     setUserId(localStorage.getItem("userId"));
   }, []);
 
-  // charger les tweets
+  const router = useRouter();
+  const { tag } = router.query; // ex: "dev"
 
+  const [hashtagValue, setHashtagValue] = useState("");
+  const [tweets, setTweets] = useState([]);
+
+  const [inputValue, setInputValue] = useState(""); // contenu de l'input
+
+  // 1) Quand l'URL change (tag), on met à jour l'input + on fetch les tweets
   useEffect(() => {
-    fetch("http://localhost:3000/tweets")
+    if (!tag) return;
+
+    // afficher "#dev" dans l'input
+    setHashtagValue(`#${tag}`);
+
+    // appeler GET /hashtags/:tag (sans #)
+    fetch(`http://localhost:3000/hashtags/${tag}`)
       .then((res) => res.json())
       .then((data) => {
-        // prendre partie []: data = { result: true, tweets: [] }
-        if (data.result && Array.isArray(data.tweets)) {
-          setTweets(data.tweets);
+        if (data.result && data.hashtag && Array.isArray(data.hashtag.tweets)) {
+          setTweets(data.hashtag.tweets);
         } else {
           setTweets([]);
         }
       })
       .catch(() => setTweets([]));
-  }, []);
+  }, [tag]);
+
+  // 2) Enter => navigue vers le nouveau hashtag
+  const handleKeyDown = (e) => {
+    if (e.key !== "Enter") return;
+
+    const raw = inputValue.trim();
+    if (!raw) return;
+
+    // accepte "#react" ou "react"
+    const slug = raw.startsWith("#") ? raw.slice(1) : raw;
+
+    // nettoie / standardise
+    const clean = slug.toLowerCase();
+
+    router.push(`/hashtag/${clean}`);
+  };
 
   const onUpdateLikes = (tweetId, likes) => {
     // tweetId → l’ID du tweet cliqué
@@ -62,32 +90,30 @@ function Home() {
       {/* Partie milieu - main content */}
       <main className={styles.mainContent}>
         <div className={styles.publieContainer}>
-          <h1>Home</h1>
+          <h1>Hashtag</h1>
           <input
             className={styles.inputStyle}
             type="text"
-            placeholder="Whta'up"
+            placeholder="input hashtag"
+            defaultValue={hashtagValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
-          <div className={styles.buttonLine}>
-            <p>28/280</p>
-            <button className={styles.buttonStyle}>Tweet</button>
-          </div>
         </div>
 
         <div className={styles.lastTweetsContainer}>
           {/* ====> mettre composant : Tweet.js*/}
-          {tweets.map((tweet) => (
+          {tweets.map((t) => (
             <Tweet
-              key={tweet._id}
-              tweetId={tweet._id}
-              tweet={tweet.text}
-              username={tweet.user.username}
-              firstname={tweet.user.firstname}
-              likes={Array.isArray(tweet.likes) ? tweet.likes : []}
+              key={t._id}
+              tweetId={t._id}
+              tweet={t.text}
+              username={t.user.username}
+              likes={Array.isArray(t.likes) ? t.likes : []}
               token={token}
               userId={userId}
               onUpdateLikes={onUpdateLikes}
-              createdAt={tweet.createdAt}
+              createdAt={t.createdAt}
             />
           ))}
         </div>
@@ -105,4 +131,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Hashtag;

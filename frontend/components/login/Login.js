@@ -1,4 +1,4 @@
-import styles from "../styles/Login.module.css";
+import styles from "../../styles/Login.module.css";
 import { useState } from "react";
 import Modal from "./Modal";
 import SignIn from "./SignIn";

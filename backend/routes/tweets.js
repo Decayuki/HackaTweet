@@ -1,50 +1,49 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { checkBody } = require('../modules/checkBody');
-const Tweet = require('../models/tweets');
-const User = require('../models/users');
-const Hashtag = require('../models/hashtags');
+const { checkBody } = require("../modules/checkBody");
+const Tweet = require("../models/tweets");
+const User = require("../models/users");
+const Hashtag = require("../models/hashtags");
 
 // ============================================================
 // Gestion de l'extraction des #
 // ============================================================
-const extractHashtags = (text = '') =>
-  //regex pour mémo : /#\ = début w+ = alphanum de un ou plrs caractères 
+const extractHashtags = (text = "") =>
+  //regex pour mémo : /#\ = début w+ = alphanum de un ou plrs caractères
   (text.match(/#\w+/g) || []).map((tag) => tag.toLowerCase());
-  
 
 // ============================================================
 // GET /tweets - Récupère tous les tweets
 // ============================================================
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const tweets = await Tweet.find()
-      
-      .populate('user', 'firstname username')  // enrichi les champs on pourrait faire -"..."
-      .populate('hashtags', 'tag')
+
+      .populate("user", "firstname username") // enrichi les champs on pourrait faire -"..."
+      .populate("hashtags", "tag")
       .sort({ createdAt: -1 }) // tri
       .limit(50);
 
     res.json({ result: true, tweets });
   } catch (error) {
-    res.json({ result: false, error: 'Failed to fetch tweets' });
+    res.json({ result: false, error: "Failed to fetch tweets" });
   }
 });
 
 // ============================================================
 // POST Création du tweet
 // ============================================================
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     // champs requis sinon ne passe pas
-    if (!checkBody(req.body, ['text', 'token'])) {
-      return res.json({ result: false, error: 'Missing fields' });
+    if (!checkBody(req.body, ["text", "token"])) {
+      return res.json({ result: false, error: "Missing fields" });
     }
 
     // Si token = user else: error
     const user = await User.findOne({ token: req.body.token });
     if (!user) {
-      return res.json({ result: false, error: 'Invalid token' });
+      return res.json({ result: false, error: "Invalid token" });
     }
 
     // Création et sauvegarde du tweet
@@ -60,17 +59,14 @@ router.post('/', async (req, res) => {
       const hashtagIds = [];
 
       for (const tag of tags) {
-        
         // Nouvelles methodes Mongo DB findOneAndUpdate & addToSet & upsert
         // upsert : la magie update et insert si conditions réunies
         // dans mon cas : trouve et mets à jour
-        const hashtag = await Hashtag.findOneAndUpdate( 
+        const hashtag = await Hashtag.findOneAndUpdate(
           //comment ça fonctionne (I guess...)
-          { tag },                           // trouve ce tag         
-          { $addToSet: { tweets: tweet._id } },       // puis tu feras...addToSet (ajout au tableau sans doublon)
+          { tag }, // trouve ce tag
+          { $addToSet: { tweets: tweet._id } }, // puis tu feras...addToSet (ajout au tableau sans doublon)
           { new: true, upsert: true, setDefaultsOnInsert: true } //upSert crée le doc s'il n'existe pas
-          
-          
         );
         hashtagIds.push(hashtag._id);
       }
@@ -82,44 +78,43 @@ router.post('/', async (req, res) => {
 
     // Enrichis avant de le passe au front
     const populated = await tweet.populate([
-      { path: 'user', select: 'firstname username' },
-      { path: 'hashtags', select: 'tag' },
+      { path: "user", select: "firstname username" },
+      { path: "hashtags", select: "tag" },
     ]);
 
     return res.json({ result: true, tweet: populated });
-
   } catch (error) {
-    res.json({ result: false, error: 'Failed to create tweet' });
+    res.json({ result: false, error: "Failed to create tweet" });
   }
 });
 
 // ============================================================
-// DELETE 
+// DELETE
 // ============================================================
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     // Token check
-    if (!checkBody(req.body, ['token'])) {
-      return res.json({ result: false, error: 'Missing token' });
+    if (!checkBody(req.body, ["token"])) {
+      return res.json({ result: false, error: "Missing token" });
     }
 
     const user = await User.findOne({ token: req.body.token });
     if (!user) {
-      return res.json({ result: false, error: 'Invalid token' });
+      return res.json({ result: false, error: "Invalid token" });
     }
 
     // Trouve le tweet à supprimer
     const tweet = await Tweet.findById(req.params.id);
     if (!tweet) {
-      return res.json({ result: false, error: 'Tweet not found' });
+      return res.json({ result: false, error: "Tweet not found" });
     }
 
     // Seul l'user du tweet peut delete
     if (tweet.user.toString() !== user._id.toString()) {
-      return res.json({ result: false, error: 'Not authorized' });
+      return res.json({ result: false, error: "Not authorized" });
     }
 
-    // Supprime 
+    // Supprime
     await Tweet.findByIdAndDelete(req.params.id);
 
     // 5. Nettoie les références dans les hashtags
@@ -130,10 +125,55 @@ router.delete('/:id', async (req, res) => {
     );
 
     return res.json({ result: true });
-
   } catch (error) {
-    res.json({ result: false, error: 'Failed to delete tweet' });
+    res.json({ result: false, error: "Failed to delete tweet" });
   }
 });
+// ============================================================
+// Gestion de Like
+// ============================================================
+router.put("/:id/like", (req, res) => {
+  if (!checkBody(req.body, ["token"])) {
+    return res.json({ result: false, error: "Missing token" });
+  }
+
+  User.findOne({ token: req.body.token })
+    .then((user) => {
+      if (!user) {
+        res.json({ result: false, error: "Invalid token" });
+        return null;
+      }
+      return Tweet.findById(req.params.id).then((tweet) => ({ user, tweet }));
+    })
+    .then((data) => {
+      if (!data) return null;
+
+      const { user, tweet } = data;
+
+      if (!tweet) {
+        res.json({ result: false, error: "Tweet not found" });
+        return null;
+      }
+
+      const alreadyLiked = tweet.likes.some(
+        // comparaison fiable ObjectId
+        (id) => id.toString() === user._id.toString()
+      );
+
+      if (alreadyLiked) {
+        tweet.likes.pull(user._id); // unlike
+      } else {
+        tweet.likes.addToSet(user._id); // like (évite doublon)
+      }
+
+      return tweet.save();
+    })
+    .then((savedTweet) => {
+      if (!savedTweet) return;
+      res.json({ result: true, likes: savedTweet.likes });
+    })
+    .catch(() => res.json({ result: false, error: "Like failed" }));
+});
+
 
 module.exports = router;

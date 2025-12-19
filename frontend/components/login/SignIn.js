@@ -1,4 +1,4 @@
-import styles from "../styles/Modale.module.css";
+import styles from "../../styles/Modale.module.css";
 
 function SignIn() {
   return (
