@@ -1,21 +1,28 @@
+import { createSlice } from "@reduxjs/toolkit";
 
 // etat de base
 const initialState = {
-  username: '',
-  token: '',
+  username: "",
+  token: "",
+  userId: null,
   isLogged: false,
 };
 // création du slice redux "user"
 // soit state + actions (reducers)
 const userSlice = creatSlice({
-    // nom du slice
-  name: 'user',
+  // nom du slice
+  name: "user",
   initialState,
   reducers: {
-    setUser(state, action) {
+    login: (state, action) => {
       state.username = action.payload.username;
       state.token = action.payload.token;
+      state.userId = action.payload.userId;
       state.isLogged = true;
+    },
+    logout: (state, action) => {
+      state.token = null;
+      state.username = null;
     },
   },
 });
@@ -24,7 +31,7 @@ export const { setUser } = userSlice.actions;
 export default userSlice.reducer;
 
 //
-// En dessous c'est la V1 
+// En dessous c'est la V1
 // J'ai trouvé ensuite mieux et avec RTK ...
 
 //  Crée une action Redux avec un type + payload
