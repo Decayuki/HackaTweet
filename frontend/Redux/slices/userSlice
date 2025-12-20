@@ -1,57 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// etat de base
+// state de base
 const initialState = {
   username: "",
   token: "",
-  userId: null,
   isLogged: false,
 };
+
 // création du slice redux "user"
-// soit state + actions (reducers)
-const userSlice = creatSlice({
-  // nom du slice
+// state + actions (reducers)
+const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state, action) => {
+    setUser(state, action) {
       state.username = action.payload.username;
       state.token = action.payload.token;
-      state.userId = action.payload.userId;
       state.isLogged = true;
     },
-    logout: (state, action) => {
-      state.token = null;
-      state.username = null;
+    logout(state) {
+      state.username = "";
+      state.token = "";
+      state.isLogged = false;
     },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, logout } = userSlice.actions;
+
 export default userSlice.reducer;
-
-//
-// En dessous c'est la V1
-// J'ai trouvé ensuite mieux et avec RTK ...
-
-//  Crée une action Redux avec un type + payload
-// export function setUser({ username, token }) {
-//   return {
-//     type: 'user/setUser', // nom de l'action
-//     payload: { username, token }, // les data
-//   };
-// }
-
-// // Reducer qui met à jour le state
-// export default function userReducer(state = initialState, action) {
-//   if (action.type === 'user/setUser') {
-//     return {
-//       ...state,
-//       username: action.payload.username,
-//       token: action.payload.token,
-//       isLogged: true,
-//     };
-//   }
-//   // si le state ne peut etre update on renvoie l'état actuel
-//   return state;
-// }
