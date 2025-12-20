@@ -109,7 +109,7 @@ function Hashtag() {
               tweetId={t._id}
               tweet={t.text}
               username={t.user.username}
-              likes={Array.isArray(t.likes) ? t.likes : []}
+              likes={t.likes}
               token={token}
               userId={userId}
               onUpdateLikes={onUpdateLikes}

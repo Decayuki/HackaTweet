@@ -130,42 +130,47 @@ router.delete("/:id", async (req, res) => {
   }
 });
 // ============================================================
-// Gestion de Like
+// Gestion de Like: liker par user
 // ============================================================
 router.put("/:id/like", (req, res) => {
+  // vérifier token existe ou pas
   if (!checkBody(req.body, ["token"])) {
     return res.json({ result: false, error: "Missing token" });
   }
-
+  // chercher user par token
   User.findOne({ token: req.body.token })
     .then((user) => {
       if (!user) {
         res.json({ result: false, error: "Invalid token" });
         return null;
       }
+      // on doit aussi chercher tweet que user like, retourne un objet {user, tweet}
       return Tweet.findById(req.params.id).then((tweet) => ({ user, tweet }));
     })
     .then((data) => {
+      // token is invalid
       if (!data) return null;
 
-      const { user, tweet } = data;
+      const user = data.user;
+      const tweet = data.tweet;
 
       if (!tweet) {
         res.json({ result: false, error: "Tweet not found" });
         return null;
       }
-
+      // tweet.likes est un tableau d’ObjectId (IDs des users qui ont liké).
       const alreadyLiked = tweet.likes.some(
-        // comparaison fiable ObjectId
+        // comparaison user id en conversion en String
         (id) => id.toString() === user._id.toString()
       );
-
+      // si déjà liker, enlever user id de tableau
       if (alreadyLiked) {
         tweet.likes.pull(user._id); // unlike
       } else {
+        // sinon ajouter user id dans le tableau en vérifiant si c'est doublon
         tweet.likes.addToSet(user._id); // like (évite doublon)
       }
-
+      // sauvegarder la modification dans la BDD
       return tweet.save();
     })
     .then((savedTweet) => {
@@ -174,6 +179,5 @@ router.put("/:id/like", (req, res) => {
     })
     .catch(() => res.json({ result: false, error: "Like failed" }));
 });
-
 
 module.exports = router;

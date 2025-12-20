@@ -5,11 +5,10 @@ import { useState } from "react";
 import { useLikeTweetMutation } from "../../Redux/Services/tweetApi";
 
 function Tweet(props) {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(
-    typeof props.likes === "number" ? props.likes : 0
-  );
+  // uniquement utiliser quand props.likes est un format tableau, quand ce undefined -> n'est pas tableau 
+const [likes, setLikes] = useState(Array.isArray(props.likes) ? props.likes : []);
 
+<<<<<<< HEAD
 // Update avec utilisation de la mutation RTK
   const [likeTweet] = useLikeTweetMutation(); 
 
@@ -40,6 +39,29 @@ function Tweet(props) {
   //     })
   //     .catch(console.log);
   // };
+=======
+  const handleLike = () => {
+    fetch(`http://localhost:3000/tweets/${props.tweetId}/like`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: props.token }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.result) {
+          setLikes(data.likes); // tableau
+        }
+      })
+      .catch(console.log);
+  };
+
+  // coeur rouge si ce userId est dans likes[]
+  const isLiked =
+    props.userId && Array.isArray(likes)
+      ? likes.some((id) => id.toString() === props.userId.toString())
+      : false;
+
+>>>>>>> 04d6f736227168b8e234daf48950239f260bea04
 
   function formatTweetDate(createdAt) {
     const createdDate = new Date(createdAt);
@@ -81,9 +103,9 @@ function Tweet(props) {
         <FontAwesomeIcon
           onClick={handleLike}
           icon={faHeart}
-          style={{ color: isLiked ? "red" : "grey", cursor: "pointer" }}
+          style={{ color: isLiked ? "red" : "grey" }}
         />
-        <span>{likes}</span>
+        <span>{likes.lentgth}</span>
         <FontAwesomeIcon icon={faTrash} />
       </div>
     </div>
