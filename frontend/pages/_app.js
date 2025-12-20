@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
-import { store } from '../Redux/store'; // ← Store unique configuré ici
-import '../styles/globals.css'; // ← À adapter si tu as un fichier global CSS
+import { store } from '../Redux/store'; 
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
