@@ -7,14 +7,24 @@ export const tweetApi = createApi({
 // fetch endpoint Backend
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/tweet' }),
   //
-  // revoir avec le code de Victor
+  // revoir avec le code de Victor pour la gestion du token
   //
+  // //    prepareHeaders: (headers, { getState }) => {
+  //     const token = (getState() as RootState).user.token
+
+  //     if (token) {
+  //       headers.set('authorization', `Bearer ${token}`)
+  //     }
+
+  //     return headers
+  //   },
+
   endpoints: (builder) => ({
-    // à partir du backend
+    
     tweets: builder.mutation({
-      //envoie la requete de "credentials" si c'etait des tweet j'aurai mis tweet ? D'ou vient credentials ?
+      
         query: (credentials) => ({
-            // la requete demande via la route /sign in les "credentials"
+      
         url: '/tweet',
         method: 'get',
         body: credentials,

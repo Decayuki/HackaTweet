@@ -1,6 +1,6 @@
 import styles from "../styles/Modale.module.css";
 import { useSignUpMutation } from "../../Redux/Services/usersApi";
-import { useState } from 'react';
+import { useState } from "react";
 
 function SignUp() {
   // état du formulaire
@@ -17,14 +17,15 @@ function SignUp() {
   };
   // fonction déclenchée au clic
   const handleSubmit = async () => {
-      // Appelle l'API via les data de form
-      // hook RTK
-      const res = await signUp(form);
-      if (!res.data?.result) {
-        alter(res.data?.error || "Erreur"); // faudrait améliorer ça...
-        return;
-      }
-      alert("Inscription réussie, bienvenue :)");
+    // Appelle l'API via les data de form
+    // hook RTK
+    const res = await signUp(form);
+    
+    if (!res.data?.result) {
+      alert(res.data?.error || "Erreur"); // faudrait améliorer ça...
+      return;
+    }
+    alert("Inscription réussie, bienvenue :)");
   };
 
   return (
