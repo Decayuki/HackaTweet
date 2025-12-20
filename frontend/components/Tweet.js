@@ -2,6 +2,7 @@ import styles from "../styles/Tweet.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useLikeTweetMutation } from "../../Redux/Services/tweetApi";
 
 function Tweet(props) {
   const [isLiked, setIsLiked] = useState(false);
@@ -9,19 +10,36 @@ function Tweet(props) {
     typeof props.likes === "number" ? props.likes : 0
   );
 
-  const handleLike = () => {
-    fetch(`http://localhost:3000/tweets/${props.tweetId}/like`, {
-      method: "PUT",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.result) {
-          setLikes(data.likes); // nombre
-          setIsLiked(true); // cœur rouge
-        }
-      })
-      .catch(console.log);
+// Update avec utilisation de la mutation RTK
+  const [likeTweet] = useLikeTweetMutation(); 
+
+  const handleLike = async () => {
+    try {
+      const { data } = await likeTweet(props.tweetId);
+
+      if (data?.result) {
+        setLikes(data.likes);       // mise à jour du nombre
+        setIsLiked(true);           // cœur en rouge
+      }
+    } catch (error) {
+      console.error("Erreur lors du like :", error);
+    }
   };
+
+  // Old version fetch direct en bd
+  // const handleLike = () => {
+  //   fetch(`http://localhost:3000/tweets/${props.tweetId}/like`, {
+  //     method: "PUT",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.result) {
+  //         setLikes(data.likes); // nombre
+  //         setIsLiked(true); // cœur rouge
+  //       }
+  //     })
+  //     .catch(console.log);
+  // };
 
   function formatTweetDate(createdAt) {
     const createdDate = new Date(createdAt);

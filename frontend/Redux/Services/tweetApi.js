@@ -1,43 +1,49 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import tweets from '../../../backend/models/tweets';
+// meme logique que pour usersApi
+// pour chaque requete le token est en header
+const baseQueryWithAuth = fetchBaseQuery({
+  baseUrl: "http://localhost:3000/tweet",
+  prepareHeaders: (headers, { getState }) => {
+    const token = getState().user.token;
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    return headers;
+  },
+});
 
 export const tweetApi = createApi({
-  reducerPath: 'tweetApi',
-// fetch endpoint Backend
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/tweet' }),
-  //
-  // revoir avec le code de Victor pour la gestion du token
-  //
-  // //    prepareHeaders: (headers, { getState }) => {
-  //     const token = (getState() as RootState).user.token
-
-  //     if (token) {
-  //       headers.set('authorization', `Bearer ${token}`)
-  //     }
-
-  //     return headers
-  //   },
-
+  reducerPath: "tweetApi",
+  baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
-    
-    tweets: builder.mutation({
-      
-        query: (credentials) => ({
-      
-        url: '/tweet',
-        method: 'get',
-        body: credentials,
+    // récupération de tous les tweets (GET)
+    getTweets: builder.query({
+      query: () => ({
+        url: "/", // correspond à /tweet côté backend
+        method: "GET",
       }),
     }),
-    signUp: builder.mutation({
-      query: (userInfo) => ({
-        url: '/signup',
-        method: 'POST',
-        body: userInfo,
+
+    // création d'un nouveau tweet (POST)
+    // addTweet = mutation, + param newTweet
+    addTweet: builder.mutation({
+      query: (newTweet) => ({
+        url: "/",
+        method: "POST",
+        body: newTweet,
+      }),
+    }),
+
+    likeTweet: builder.mutation({
+      query: (tweetId) => ({
+        url: `/${tweetId}/like`,
+        method: "PUT",
       }),
     }),
   }),
 });
 
-export const { useSignInMutation, useSignUpMutation } = usersApi;
+export const { useGetTweetsQuery, useAddTweetMutation, useLikeTweetMutation } = tweetApi;
