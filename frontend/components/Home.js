@@ -85,7 +85,7 @@ function Home() {
               firstname={tweet.user.firstname}
               likes={Array.isArray(tweet.likes) ? tweet.likes : []}
               token={token}
-              userId={userId}
+              userId={tweet.likes}
               onUpdateLikes={onUpdateLikes}
               createdAt={tweet.createdAt}
             />
