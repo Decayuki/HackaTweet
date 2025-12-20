@@ -1,41 +1,28 @@
 import styles from "../styles/Home.module.css";
-import Tweet from "../components/Tweet";
 import Trend from "./Trend";
-import { useState, useEffect } from "react";
+import LastTweets from "./LastTweets";
+import { useState } from "react";
+import { useAddTweetMutation } from "../Redux/Services/tweetApi";
 
 function Home() {
-  const [tweets, setTweets] = useState([]); // tableau
-  const [token, setToken] = useState(""); // mets ton token ici (ex localStorage)
-  const [userId, setUserId] = useState(""); // mets ton userId ici
+  const [tweetContent, setTweetContent] = useState("");
 
-  useEffect(() => {
-    setToken(localStorage.getItem("token"));
-    setUserId(localStorage.getItem("userId"));
-  }, []);
+  // hook RTK mutation 
+  const [addTweet, { isLoading }] = useAddTweetMutation();
+  const handleTweetSubmit = async () => {
+    if (!tweetContent.trim()) return;
 
-  // charger les tweets
+    try {
+      const res = await addTweet({ text: tweetContent });
 
-  useEffect(() => {
-    fetch("http://localhost:3000/tweets")
-      .then((res) => res.json())
-      .then((data) => {
-        // prendre partie []: data = { result: true, tweets: [] }
-        if (data.result && Array.isArray(data.tweets)) {
-          setTweets(data.tweets);
-        } else {
-          setTweets([]);
-        }
-      })
-      .catch(() => setTweets([]));
-  }, []);
-
-  const onUpdateLikes = (tweetId, likes) => {
-    // tweetId → l’ID du tweet cliqué
-    // likes → le nouveau tableau de likes renvoyé par le backend
-    setTweets((prev) =>
-      // On parcourt tous les tweets,retourne un nouveau tableau
-      prev.map((t) => (t._id === tweetId ? { ...t, likes } : t))
-    );
+      if (res.data?.result) {
+        setTweetContent("");
+      } else {
+        alert(res.data?.error || "Erreur lors de l’envoi du tweet");
+      }
+    } catch (error) {
+      alert("Erreur serveur");
+    }
   };
 
   return (
@@ -66,30 +53,25 @@ function Home() {
           <input
             className={styles.inputStyle}
             type="text"
-            placeholder="Whta'up"
+            placeholder="What's up"
+            value={tweetContent}
+            onChange={(e) => setTweetContent(e.target.value)}
           />
           <div className={styles.buttonLine}>
-            <p>28/280</p>
-            <button className={styles.buttonStyle}>Tweet</button>
+            <p>{tweetContent.length}/280</p>
+            <button
+              className={styles.buttonStyle}
+              onClick={handleTweetSubmit}
+              disabled={isLoading || tweetContent.length === 0}
+            >
+              Tweet
+            </button>
           </div>
         </div>
 
+        {/* RTK : affiche les tweets depuis LastTweets (RTK Query) */}
         <div className={styles.lastTweetsContainer}>
-          {/* ====> mettre composant : Tweet.js*/}
-          {tweets.map((tweet) => (
-            <Tweet
-              key={tweet._id}
-              tweetId={tweet._id}
-              tweet={tweet.text}
-              username={tweet.user.username}
-              firstname={tweet.user.firstname}
-              likes={Array.isArray(tweet.likes) ? tweet.likes : []}
-              token={token}
-              userId={tweet.likes}
-              onUpdateLikes={onUpdateLikes}
-              createdAt={tweet.createdAt}
-            />
-          ))}
+          <LastTweets />
         </div>
       </main>
 
@@ -97,7 +79,6 @@ function Home() {
       <div className={styles.rightSection}>
         <h1>Trends</h1>
         <div className={styles.trendContainer}>
-          {/* Partie composant: Trend.js */}
           <Trend />
         </div>
       </div>

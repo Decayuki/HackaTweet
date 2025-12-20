@@ -1,0 +1,34 @@
+import React from 'react';
+import { useGetTweetsQuery } from '../Redux/Services/tweetApi';
+import Tweet from './Tweet';
+
+function LastTweets() {
+  // on appelle via RTK
+  const { data, isLoading, isError } = useGetTweetsQuery();
+
+// Gestion erreur
+  if (isLoading) return <p>Chargement des tweets...</p>;
+  if (isError) return <p>Erreur lors du chargement des tweets.</p>;
+
+  if (!data || !data.tweets || data.tweets.length === 0) {
+    return <p>Aucun tweet pour le moment.</p>;
+  }
+
+  return (
+    <div>
+      {data.tweets.map((tweet) => (
+        <Tweet
+          key={tweet._id}
+          tweetId={tweet._id}
+          tweet={tweet.text} 
+          username={tweet.user.username}
+          firstname={tweet.user.firstname}
+          likes={Array.isArray(tweet.likes) ? tweet.likes : []}
+          createdAt={tweet.createdAt}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default LastTweets;

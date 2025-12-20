@@ -18,6 +18,7 @@ const baseQueryWithAuth = fetchBaseQuery({
 export const tweetApi = createApi({
   reducerPath: "tweetApi",
   baseQuery: baseQueryWithAuth,
+  tagTypes: ["tweets"],
   endpoints: (builder) => ({
     // récupération de tous les tweets (GET)
     getTweets: builder.query({
@@ -25,6 +26,7 @@ export const tweetApi = createApi({
         url: "/", // correspond à /tweet côté backend
         method: "GET",
       }),
+      providesTags: ["tweets"],
     }),
 
     // création d'un nouveau tweet (POST)
@@ -35,6 +37,8 @@ export const tweetApi = createApi({
         method: "POST",
         body: newTweet,
       }),
+      //refresh de la liste de tweets
+      invalidatesTags: ["tweets"],
     }),
 
     likeTweet: builder.mutation({
@@ -42,6 +46,7 @@ export const tweetApi = createApi({
         url: `/${tweetId}/like`,
         method: "PUT",
       }),
+      invalidatesTags: ["tweets"],
     }),
   }),
 });
