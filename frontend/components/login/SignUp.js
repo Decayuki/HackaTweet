@@ -17,7 +17,6 @@ function SignUp() {
   };
   // fonction déclenchée au clic
   const handleSubmit = async () => {
-<<<<<<< HEAD:frontend/components/SignUp.js
     // Appelle l'API via les data de form
     // hook RTK
     const res = await signUp(form);
@@ -27,16 +26,6 @@ function SignUp() {
       return;
     }
     alert("Inscription réussie, bienvenue :)");
-=======
-      // Appelle l'API via les data de form
-      // hook RTK
-      const res = await signUp(form);
-      if (!res.data?.result) {
-        alert(res.data?.error || "Erreur"); // faudrait améliorer ça...
-        return;
-      }
-      alert("Inscription réussie, bienvenue :)");
->>>>>>> refs/remotes/origin/main:frontend/components/login/SignUp.js
   };
 
   return (
