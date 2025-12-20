@@ -3,14 +3,21 @@ import Trend from "./Trend";
 import LastTweets from "./LastTweets";
 import { useState } from "react";
 import { useAddTweetMutation } from "../Redux/Services/tweetApi";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../Redux/slices/userSlice";
 
 function Home() {
   const [tweetContent, setTweetContent] = useState("");
 
+  // user depuis redux
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   // hook RTK mutation 
   const [addTweet, { isLoading }] = useAddTweetMutation();
+
   const handleTweetSubmit = async () => {
-    if (!tweetContent.trim()) return;
+    if (!tweetContent.trim() || tweetContent.length > 280) return;
 
     try {
       const res = await addTweet({ text: tweetContent });
@@ -23,6 +30,12 @@ function Home() {
     } catch (error) {
       alert("Erreur serveur");
     }
+  };
+
+  // action logout
+  const handleLogout = () => {
+    dispatch(setUser({ username: "", token: "" }));
+    window.location.href = "/";
   };
 
   return (
@@ -38,11 +51,13 @@ function Home() {
               <img className={styles.profilPhoto} />
             </div>
             <div className={styles.userInfo}>
-              <p className={styles.userName}>John</p>
-              <p className={styles.accountName}>@JohnCena</p>
+              <p className={styles.userName}>{user.firstname}</p>
+              <p className={styles.accountName}>@{user.username}</p>
             </div>
           </div>
-          <button className={styles.logoutBtn}>Logout</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
 
@@ -62,7 +77,7 @@ function Home() {
             <button
               className={styles.buttonStyle}
               onClick={handleTweetSubmit}
-              disabled={isLoading || tweetContent.length === 0}
+              disabled={isLoading || tweetContent.length === 0 || tweetContent.length > 280}
             >
               Tweet
             </button>
